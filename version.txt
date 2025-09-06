@@ -4,3 +4,4 @@
 4.del public key5
 5.change .gitmodules url to my changed sdk1
 6.new fork
+7.更新本地BSP
