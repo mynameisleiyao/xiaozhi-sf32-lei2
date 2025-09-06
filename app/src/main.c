@@ -252,6 +252,7 @@ void bt_app_connect_pan_timeout_handle(void *parameter)
     #include "dfs_file.h"
     #include "dfs_posix.h"
     #include "drv_flash.h"
+#include <bf0_hal_pmu.h>
     #define NAND_MTD_NAME "root"
 int mnt_init(void)
 {
