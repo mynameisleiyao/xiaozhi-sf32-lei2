@@ -48,10 +48,12 @@
 #ifndef LXT_LP_CYCLE
     #define LXT_LP_CYCLE 200
 #endif
+#include <bf0_hal_gpio.h>
 
 #ifndef PWRKEY_CNT_CLOCK_FREQ
     #define PWRKEY_CNT_CLOCK_FREQ  (32000)
 #endif
+#include <bf0_hal_mpi_ex.h>
 
 #ifndef PWRKEY_HARD_RESET_TIME
     #define PWRKEY_HARD_RESET_TIME     (30)   /* unit:s */
@@ -62,7 +64,8 @@ static uint16_t mpi2_div = 1;
 
 
 static uint32_t otp_flash_addr = AUTO_FLASH_MAC_ADDRESS;
-
+//LEI
+#define PA_EN_PIN 10
 #define FUNC_BSP_FLASH_DIV_GET(i) \
 uint16_t BSP_GetFlash##i##DIV(void) \
 { \
