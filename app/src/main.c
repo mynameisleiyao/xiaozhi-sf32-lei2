@@ -55,8 +55,8 @@ void HAL_MspInit(void)
     //__asm("B .");        /*For debugging purpose*/
     BSP_IO_Init();
 #ifdef BSP_USING_BOARD_SF32LB52_XTY_AI
-    HAL_PIN_Set(PAD_PA38, GPTIM1_CH1, PIN_PULLUP, 1);
-    HAL_PIN_Set(PAD_PA40, GPTIM1_CH2, PIN_PULLUP, 1);
+    // HAL_PIN_Set(PAD_PA38, GPTIM1_CH1, PIN_PULLUP, 1);
+    // HAL_PIN_Set(PAD_PA40, GPTIM1_CH2, PIN_PULLUP, 1);
 #endif
 }
 /* User code start from here

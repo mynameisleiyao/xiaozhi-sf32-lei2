@@ -1,3 +1,8 @@
 #Kconfig root for APP.
 source "$SIFLI_SDK/Kconfig.v2"
 rsource "Kconfig.proj"
+config PA_EN_PIN
+    int "PA Enable Pin"
+    default 10  # 也可以不设默认值，由 proj.conf 赋值
+    help
+        Pin number for PA (Power Amplifier) enable.

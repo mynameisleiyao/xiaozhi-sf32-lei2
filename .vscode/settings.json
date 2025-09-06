@@ -75,6 +75,7 @@
         "variant": "cpp",
         "rtthread.h": "c",
         "bf0_hal_gpio.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "bts2_app_inc.h": "c"
     }
 }
