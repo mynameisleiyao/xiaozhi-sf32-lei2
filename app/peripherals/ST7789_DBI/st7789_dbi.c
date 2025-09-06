@@ -11,7 +11,8 @@
 
 
 
-
+//lei
+#define LCD_USING_ST7789_240x320_DBI 1
 
 #ifdef ROW_OFFSET_PLUS
     #define ROW_OFFSET  (ROW_OFFSET_PLUS)
@@ -145,8 +146,8 @@ void st7789_dbi_CS_HOLD_LOW(void)
     // set sensor pin to high == power on sensor board
     HAL_GPIO_WritePin(gpio, CS_PA_x_PIN, (GPIO_PinState)0);
 
-
-    HAL_PIN_Set(PAD_PA00 + CS_PA_x_PIN, GPIO_A0 + CS_PA_x_PIN, PIN_PULLDOWN, 1);
+    //lei CS_PA_x_PIN与GPIO_NOPULL冲突,输出模式,不需要下拉电阻
+    // HAL_PIN_Set(PAD_PA00 + CS_PA_x_PIN, GPIO_A0 + CS_PA_x_PIN, PIN_PULLDOWN, 1);
 }
 
 void BSP_GPIO_Set_BL(int pin, int val)
@@ -201,6 +202,7 @@ static void LCD_ReadMode(LCDC_HandleTypeDef *hlcdc, bool enable)
   * @param  None
   * @retval None
   */
+
 static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
 {
     uint8_t parameter[15];
@@ -216,7 +218,9 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     BSP_LCD_Reset(1);
     LCD_DRIVER_DELAY_MS(1);
     BSP_LCD_Reset(0); // Reset LCD
-    HAL_Delay_us(20);
+     //ai LCD_Init中复位操作（BSP_LCD_Reset）后仅延时 20us，而 ST7789 datasheet 要求复位后至少等待 120ms 再发送唤醒指令（0x11），当前延时可能不足，导致初始化失败
+    // HAL_Delay_us(20);
+    HAL_Delay(120);
     BSP_LCD_Reset(1);
     LCD_DRIVER_DELAY_MS(50);
 
@@ -369,14 +373,14 @@ static void LCD_SetRegion(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos0, uint16_t Yp
 {
     uint8_t parameter[4];
     parameter[0] = Xpos0>>8;
-    parameter[1] = Xpos0 & 0x0f;
+    parameter[1] = Xpos0 & 0xFF;
     parameter[2] = Xpos1>>8;
-    parameter[3] = Xpos1 & 0x0f;
+    parameter[3] = Xpos1 & 0xFF;
     LCD_WriteReg(hlcdc, REG_CASET, parameter, 4);
     parameter[0] = Ypos0>>8;
-    parameter[1] = Ypos0 & 0x0f;
+    parameter[1] = Ypos0 & 0xFF;
     parameter[2] = Ypos1>>8;
-    parameter[3] = Ypos1 & 0x0f;
+    parameter[3] = Ypos1 & 0xFF;
     LCD_WriteReg(hlcdc, REG_RASET, parameter, 4);
     LCD_WriteReg(hlcdc, 0x2c, (uint8_t *)NULL, 0);
 }
@@ -437,20 +441,49 @@ static void LCD_WriteReg(LCDC_HandleTypeDef *hlcdc, uint16_t LCD_Reg, uint8_t *P
   * @param  ReadSize: Number of bytes to read
   * @retval LCD Register Value.
   */
+// static uint32_t LCD_ReadData(LCDC_HandleTypeDef *hlcdc, uint16_t RegValue, uint8_t ReadSize)
+// {
+//     uint32_t rd_data = 0;
+
+//     LCD_ReadMode(hlcdc, true);
+
+//     st7789_dbi_CS_HOLD_LOW();
+//     HAL_LCDC_ReadU8Reg(hlcdc, RegValue, (uint8_t *)&rd_data, ReadSize);
+//     st7789_dbi_CS_RELEASE();
+//     LCD_ReadMode(hlcdc, false);
+
+//     return rd_data;
+// }
+//ai 生成 /*LCD_ReadData函数中，ST7789 读数据前需要一定的 dummy 周期（通常 8 个时钟），但代码中仅通过LCD_ReadMode降低频率，未明确配置 dummy 周期，可能导致读数据错误。 */
 static uint32_t LCD_ReadData(LCDC_HandleTypeDef *hlcdc, uint16_t RegValue, uint8_t ReadSize)
 {
     uint32_t rd_data = 0;
+    uint8_t dummy_buffer[8] = {0}; // 用于吸收Dummy数据的缓冲区
 
+    // 切换到读模式并降低时钟频率（ST7789读操作需要较低频率）
     LCD_ReadMode(hlcdc, true);
 
     st7789_dbi_CS_HOLD_LOW();
-    HAL_LCDC_ReadU8Reg(hlcdc, RegValue, (uint8_t *)&rd_data, ReadSize);
+    
+    // 1. 写入要读取的寄存器地址
+    HAL_LCDC_WriteU8Reg(hlcdc, RegValue, NULL, 0);
+    
+    // 2. 处理ST7789的读数据前的Dummy周期（至少8个时钟）
+    // 读取并丢弃Dummy数据（ST7789首次读数据为无效值）
+    HAL_LCDC_ReadU8Reg(hlcdc, 0x00, dummy_buffer, 1);
+    
+    // 3. 读取有效数据
+    if (ReadSize > 0)
+    {
+        HAL_LCDC_ReadU8Reg(hlcdc, 0x00, (uint8_t *)&rd_data, ReadSize);
+    }
+    
     st7789_dbi_CS_RELEASE();
+    // 恢复写模式时钟频率
     LCD_ReadMode(hlcdc, false);
 
     return rd_data;
 }
-
 
 
 static uint32_t LCD_ReadPixel(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos, uint16_t Ypos)
@@ -477,7 +510,8 @@ static uint32_t LCD_ReadPixel(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos, uint16_t
     switch (lcdc_int_cfg.color_mode)
     {
     case LCDC_PIXEL_FORMAT_RGB565:
-        parameter[0] = 0x55;
+        // parameter[0] = 0x55;
+        parameter[0] = 0x05;
         ret_v = (uint32_t)(((c >> 8) & 0xF800) | ((c >> 5) & 0x7E0) | ((c >> 3) & 0X1F));
         break;
 
@@ -521,7 +555,8 @@ static void LCD_SetColorMode(LCDC_HandleTypeDef *hlcdc, uint16_t color_mode)
     {
     case RTGRAPHIC_PIXEL_FORMAT_RGB565:
         /* Color mode 16bits/pixel */
-        parameter[0] = 0x55;
+        parameter[0] = 0x05;
+        // parameter[0] = 0x55;
         lcdc_int_cfg.color_mode = LCDC_PIXEL_FORMAT_RGB565;
         break;
     default:
@@ -537,7 +572,9 @@ static void LCD_SetColorMode(LCDC_HandleTypeDef *hlcdc, uint16_t color_mode)
 static void LCD_SetBrightness(LCDC_HandleTypeDef *hlcdc, uint8_t br)
 {
     uint8_t bright = (uint8_t)((uint16_t)UINT8_MAX * br / 100);
-    LCD_WriteReg(hlcdc, REG_WBRIGHT, &br, 1);
+    //lei LCD_SetBrightness函数中，计算亮度值后实际写入寄存器的是原始参数br，而非转换后的bright
+    // LCD_WriteReg(hlcdc, REG_WBRIGHT, &br, 1);
+    LCD_WriteReg(hlcdc, REG_WBRIGHT, &bright, 1);
 }
 
 /*****************************************************************************/

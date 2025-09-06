@@ -24,6 +24,7 @@
 #include "lv_seqimg.h"
 #include "xiaozhi_ui.h"
 #include "xiaozhi_weather.h"
+#include <bf0_hal_gpio.h>
 
 // 定义UI消息类型
 typedef enum {
@@ -1540,18 +1541,21 @@ void pm_ui_init()
 }
 void xiaozhi_update_battery_level(int level)
 {
+    
     // 确保电量在 0 到 100 之间
     g_battery_level = level;
+   
     //rt_kprintf("Battery level updated: %d\n", g_battery_level);
     if (g_battery_fill)
     {
-#ifdef LCD_USING_ST7789
-        int width =
-            (OUTLINE_W_ST7789 - 4) * g_battery_level / 100; // 计算填充宽度
-#else                                                       // LCD_USING_ST7789
-        int width =
-            (OUTLINE_W * g_scale - 4) * g_battery_level / 100; // 计算填充宽度
-#endif
+    int width;
+    #ifdef LCD_USING_ST7789
+            width =
+                (OUTLINE_W_ST7789 - 4) * g_battery_level / 100; // 计算填充宽度
+    #else                                                       // LCD_USING_ST7789
+            width =
+                (OUTLINE_W * g_scale - 4) * g_battery_level / 100; // 计算填充宽度
+    #endif
 
         if (width < 2 && g_battery_level > 0)
             width = 2;                           // 最小宽度为 2
@@ -1568,6 +1572,7 @@ void xiaozhi_update_battery_level(int level)
             lv_obj_set_style_bg_color(g_battery_fill, lv_color_hex(0xff00),
                                       0); // 绿色
         }
+        
     }
 
     if (g_battery_label)
