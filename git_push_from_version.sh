@@ -6,6 +6,10 @@ if [ ! -d .git ]; then
     exit 1
 fi
 
+# 获取当前所在分支
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+echo "当前分支: $current_branch"
+
 # 从version.txt最后一行读取提交信息
 version_file="version.txt"
 default_msg="更新内容"
@@ -47,12 +51,12 @@ else
     fi
 fi
 
-# 推送到远程仓库的main分支
-echo "正在推送到远程仓库 origin/main..."
-git push origin main
+# 推送到远程仓库的当前分支
+echo "正在推送到远程仓库 origin/$current_branch..."
+git push origin "$current_branch"
 if [ $? -ne 0 ]; then
     echo "错误：推送失败，请检查网络连接、远程仓库配置或分支名称是否正确"
     exit 1
 fi
 
-echo "操作完成：代码已成功上传到远程仓库 origin/main"
+echo "操作完成：代码已成功上传到远程仓库 origin/$current_branch"
