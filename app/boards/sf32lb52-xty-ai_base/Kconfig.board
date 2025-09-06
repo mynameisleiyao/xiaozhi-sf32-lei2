@@ -20,7 +20,7 @@ config LCD_BACKLIGHT_CONTROL_PIN
     
 config RGBLED_CONTROL_PIN
     int
-    default 32  
+    default 44  
 
 config PA_EN_LEVEL
     bool "Set to true if the PA level is high when the PA_EN pin is high."
@@ -28,4 +28,4 @@ config PA_EN_LEVEL
 
 config PA_EN_PIN
     int "The pin number for the PA_EN control."
-    default 26
+    default 10
