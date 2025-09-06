@@ -13,7 +13,7 @@ default_msg="更新内容"
 if [ -f "$version_file" ]; then
     # 读取文件最后一行内容并去除首尾空白
     commit_msg=$(tail -n 1 "$version_file" | xargs)
-    # 如果最后一行最后一行内容为空，使用默认信息
+    # 如果最后一行内容为空，使用默认信息
     if [ -z "$commit_msg" ]; then
         commit_msg="$default_msg"
         echo "警告：$version_file 最后一行内容为空，将使用默认提交信息"
@@ -34,12 +34,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 提交变更（不检查提交信息是否重复）
-echo "正在提交变更..."
-git commit -m "$commit_msg"
-if [ $? -ne 0 ]; then
-    echo "错误：提交变更失败，可能没有需要提交的内容"
-    exit 1
+# 检查是否有需要提交的内容
+if git diff --cached --quiet; then
+    echo "没有需要提交的变更内容"
+else
+    # 提交变更
+    echo "正在提交变更..."
+    git commit -m "$commit_msg"
+    if [ $? -ne 0 ]; then
+        echo "错误：提交变更失败"
+        exit 1
+    fi
 fi
 
 # 推送到远程仓库的main分支
