@@ -220,7 +220,7 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     BSP_LCD_Reset(0); // Reset LCD
      //ai LCD_Init中复位操作（BSP_LCD_Reset）后仅延时 20us，而 ST7789 datasheet 要求复位后至少等待 120ms 再发送唤醒指令（0x11），当前延时可能不足，导致初始化失败
     // HAL_Delay_us(20);
-    HAL_Delay(120);
+    LCD_DRIVER_DELAY_MS(120);
     BSP_LCD_Reset(1);
     LCD_DRIVER_DELAY_MS(50);
 
@@ -233,81 +233,82 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     /* Wait for 120ms */
     LCD_DRIVER_DELAY_MS(120);
 
-    parameter[0] = 0x40;//A0
-    LCD_WriteReg(hlcdc, 0x36, parameter, 1);
+    // parameter[0] = 0x40;//A0
+    // LCD_WriteReg(hlcdc, 0x36, parameter, 1);
 
-    parameter[0] = 0x05;
-    LCD_WriteReg(hlcdc, 0x3A, parameter, 1);
+    // parameter[0] = 0x05;
+    // LCD_WriteReg(hlcdc, 0x3A, parameter, 1);
 
-    parameter[0] = 0x0C;
-    parameter[1] = 0x0C;
-    parameter[2] = 0x00;
-    parameter[3] = 0x33;
-    parameter[4] = 0x33;
-    LCD_WriteReg(hlcdc, 0xB2, parameter, 5);
+    // parameter[0] = 0x0C;
+    // parameter[1] = 0x0C;
+    // parameter[2] = 0x00;
+    // parameter[3] = 0x33;
+    // parameter[4] = 0x33;
+    // LCD_WriteReg(hlcdc, 0xB2, parameter, 5);
 
-    parameter[0] = 0x56;
-    LCD_WriteReg(hlcdc, 0xB7, parameter, 1);
+    // parameter[0] = 0x56;
+    // LCD_WriteReg(hlcdc, 0xB7, parameter, 1);
 
-    parameter[0] = 0x20;
-    LCD_WriteReg(hlcdc, 0xBB, parameter, 1);
+    // parameter[0] = 0x20;
+    // LCD_WriteReg(hlcdc, 0xBB, parameter, 1);
 
-    parameter[0] = 0x20;
-    LCD_WriteReg(hlcdc, 0xC0, parameter, 1);
+    // parameter[0] = 0x20;
+    // LCD_WriteReg(hlcdc, 0xC0, parameter, 1);
 
-    parameter[0] = 0x01;
-    LCD_WriteReg(hlcdc, 0xC2, parameter, 1);
+    // parameter[0] = 0x01;
+    // LCD_WriteReg(hlcdc, 0xC2, parameter, 1);
 
-    parameter[0] = 0x0F;
-    LCD_WriteReg(hlcdc, 0xC3, parameter, 1);
+    // parameter[0] = 0x0F;
+    // LCD_WriteReg(hlcdc, 0xC3, parameter, 1);
 
-    parameter[0] = 0x20;
-    LCD_WriteReg(hlcdc, 0xC4, parameter, 1);
+    // parameter[0] = 0x20;
+    // LCD_WriteReg(hlcdc, 0xC4, parameter, 1);
 
-    parameter[0] = 0x0F;
-    LCD_WriteReg(hlcdc, 0xC6, parameter, 1); // 60Hz
+    // parameter[0] = 0x0F;
+    // LCD_WriteReg(hlcdc, 0xC6, parameter, 1); // 60Hz
 
-    parameter[0] = 0xA4;
-    parameter[1] = 0xA1;
-    LCD_WriteReg(hlcdc, 0xD0, parameter, 2);
+    // parameter[0] = 0xA4;
+    // parameter[1] = 0xA1;
+    // LCD_WriteReg(hlcdc, 0xD0, parameter, 2);
 
-    parameter[0] = 0xA1;
-    LCD_WriteReg(hlcdc, 0xD6, parameter, 1);
+    // parameter[0] = 0xA1;
+    // LCD_WriteReg(hlcdc, 0xD6, parameter, 1);
 
-    parameter[0] = 0xF0;
-    parameter[1] = 0x00;
-    parameter[2] = 0x06;
-    parameter[3] = 0x06;
-    parameter[4] = 0x07;
-    parameter[5] = 0x05;
-    parameter[6] = 0x30;
-    parameter[7] = 0x44;
-    parameter[8] = 0x48;
-    parameter[9] = 0x38;
-    parameter[10] = 0x11;
-    parameter[11] = 0x10;
-    parameter[12] = 0x2E;
-    parameter[13] = 0x34;
-    LCD_WriteReg(hlcdc, 0xE0, parameter, 14);
+    // parameter[0] = 0xF0;
+    // parameter[1] = 0x00;
+    // parameter[2] = 0x06;
+    // parameter[3] = 0x06;
+    // parameter[4] = 0x07;
+    // parameter[5] = 0x05;
+    // parameter[6] = 0x30;
+    // parameter[7] = 0x44;
+    // parameter[8] = 0x48;
+    // parameter[9] = 0x38;
+    // parameter[10] = 0x11;
+    // parameter[11] = 0x10;
+    // parameter[12] = 0x2E;
+    // parameter[13] = 0x34;
+    // LCD_WriteReg(hlcdc, 0xE0, parameter, 14);
 
-    parameter[0] = 0xF0;
-    parameter[1] = 0x0A;
-    parameter[2] = 0x0E;
-    parameter[3] = 0x0D;
-    parameter[4] = 0x0B;
-    parameter[5] = 0x27;
-    parameter[6] = 0x2F;
-    parameter[7] = 0x44;
-    parameter[8] = 0x47;
-    parameter[9] = 0x35;
-    parameter[10] = 0x12;
-    parameter[11] = 0x12;
-    parameter[12] = 0x2C;
-    parameter[13] = 0x32;
-    LCD_WriteReg(hlcdc, 0xE1, parameter, 14);
+    // parameter[0] = 0xF0;
+    // parameter[1] = 0x0A;
+    // parameter[2] = 0x0E;
+    // parameter[3] = 0x0D;
+    // parameter[4] = 0x0B;
+    // parameter[5] = 0x27;
+    // parameter[6] = 0x2F;
+    // parameter[7] = 0x44;
+    // parameter[8] = 0x47;
+    // parameter[9] = 0x35;
+    // parameter[10] = 0x12;
+    // parameter[11] = 0x12;
+    // parameter[12] = 0x2C;
+    // parameter[13] = 0x32;
+    // LCD_WriteReg(hlcdc, 0xE1, parameter, 14);
 
-    parameter[0] = 0x00;
-    LCD_WriteReg(hlcdc, 0x35, parameter, 1);
+    // parameter[0] = 0x00;
+    // LCD_WriteReg(hlcdc, 0x35, parameter, 1);
+
 #if 0
     parameter[0] = 0x00;
     parameter[1] = 0x00;
@@ -321,13 +322,96 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     parameter[3] = 0x3F;
     LCD_WriteReg(hlcdc, 0x2A, parameter, 4);
 #endif
-    LCD_WriteReg(hlcdc, 0x20, (uint8_t *)NULL, 0);
+
+    // LCD_WriteReg(hlcdc, 0x20, (uint8_t *)NULL, 0);
+    //Porch Setting
+    parameter[0] =0x0c;
+    parameter[1] =0x0c;
+    parameter[2] =0x00;
+    parameter[3] =0x33;
+    parameter[4] =0x33;
+    LCD_WriteReg(hlcdc, 0xb2, parameter, 5);
+    //Gate Control
+    parameter[0] =0x35;
+    LCD_WriteReg(hlcdc, 0xb7, parameter, 1);
+    // ST7789SPowersetting
+    //VCOM Setting
+    parameter[0] =0x35;
+    LCD_WriteReg(hlcdc, 0xbb, parameter, 1);
+    //LCM Control
+    parameter[0] =0x2c;
+    LCD_WriteReg(hlcdc, 0xc0, parameter, 1);
+    //VDV and VRH Command Enable
+    parameter[0] =0x01;
+    LCD_WriteReg(hlcdc, 0xc2, parameter, 1);
+    //VRH Set
+    parameter[0] =0x0b;
+    LCD_WriteReg(hlcdc, 0xc3, parameter, 1);
+    //VDV Set
+    parameter[0] =0x20;
+    LCD_WriteReg(hlcdc, 0xc4, parameter, 1);
+    //Frame Rate Control in Normal Mode
+    parameter[0] =0x0f;
+    LCD_WriteReg(hlcdc, 0xc6, parameter, 1);
+    //Register Value Selection 2
+    parameter[0] =0x0f;
+    LCD_WriteReg(hlcdc, 0xca, parameter, 1);
+    //Register Value Selection 1
+    parameter[0] =0x08;
+    LCD_WriteReg(hlcdc, 0xc8, parameter, 1);
+    //Write Content Adaptive Brightness Control and Color Enhancement
+    parameter[0] =0x90;
+    LCD_WriteReg(hlcdc, 0x55, parameter, 1);
+    //Power Control 1
+    parameter[0] =0xa4;
+    parameter[1] =0xa1;
+    LCD_WriteReg(hlcdc, 0xd0, parameter, 2);
+    //Interface Pixel Format
+    parameter[0] =0x55;
+    LCD_WriteReg(hlcdc, 0x3A, parameter, 1);
+    // ST7789S Positive Voltage Gamma Control
+    parameter[0] = 0xd0;
+    parameter[1] = 0x00;
+    parameter[2] = 0x02;
+    parameter[3] = 0x07;
+    parameter[4] = 0x0b;
+    parameter[5] = 0x1a;
+    parameter[6] = 0x31;
+    parameter[7] = 0x54;
+    parameter[8] = 0x40;
+    parameter[9] = 0x29;
+    parameter[10] = 0x12;
+    parameter[11] = 0x12;
+    parameter[12] = 0x12;
+    parameter[13] = 0x17;
+    LCD_WriteReg(hlcdc, 0xe0, parameter, 14);
+
+    // Negative Voltage Gamma Control
+    parameter[0] = 0xd0;
+    parameter[1] = 0x00;
+    parameter[2] = 0x02;
+    parameter[3] = 0x07;
+    parameter[4] = 0x05;
+    parameter[5] = 0x25;
+    parameter[6] = 0x2d;
+    parameter[7] = 0x44;
+    parameter[8] = 0x45;
+    parameter[9] = 0x1c;
+    parameter[10] = 0x18;
+    parameter[11] = 0x16;
+    parameter[12] = 0x1c;
+    parameter[13] = 0x1d;
+    LCD_WriteReg(hlcdc, 0xe1, parameter, 14);
+
+    // // Display On
+    // LCD_WriteReg(hlcdc, 0x29, (uint8_t *)NULL, 0);
+
     /* clear gram */
-    HAL_LCDC_Next_Frame_TE(hlcdc, 0);
+    // HAL_LCDC_Next_Frame_TE(hlcdc, 0);
     HAL_LCDC_SetROIArea(hlcdc, 0, 0, THE_LCD_PIXEL_WIDTH - 1, THE_LCD_PIXEL_HEIGHT - 1);
     HAL_LCDC_LayerSetFormat(hlcdc, HAL_LCDC_LAYER_DEFAULT, LCDC_PIXEL_FORMAT_RGB565);
     HAL_LCDC_LayerDisable(hlcdc, HAL_LCDC_LAYER_DEFAULT);
-    HAL_LCDC_SetBgColor(hlcdc, 0, 0, 0);
+    HAL_LCDC_SetBgColor(hlcdc, 255, 0, 0);
     HAL_LCDC_SendLayerData2Reg(hlcdc, REG_WRITE_RAM, 1);
     HAL_LCDC_LayerEnable(hlcdc, HAL_LCDC_LAYER_DEFAULT);
     LCD_WriteReg(hlcdc, 0x29, (uint8_t *)NULL, 0);

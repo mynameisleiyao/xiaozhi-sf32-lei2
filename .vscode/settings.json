@@ -98,7 +98,13 @@
         "websocket_client.h": "c",
         "lv_tiny_ttf.h": "c",
         "lv_display.h": "c",
-        "mqtt_priv.h": "c"
+        "mqtt_priv.h": "c",
+        "webrtc_vad.h": "c",
+        "dfs_file.h": "c",
+        "bt_env.h": "c",
+        "iot_c_api.h": "c",
+        "bf0_hal_def.h": "c",
+        "bf0_hal.h": "c"
     },
     "python.autoComplete.extraPaths": [
         "D:/ToolChains/micropython-1.24.1/lib/micropython-lib/micropython",
