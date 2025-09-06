@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "E:\\\\Desktop\\\\ProjectJamal\\\\SF32_GITEE\\\\SDK\\\\sifli-sdk\\\\**"
+                "G:\\\\Desktop\\\\ProjectJamal\\\\SF32_GITEE\\\\SDK\\\\sifli-sdk\\\\**"
             ],
             "defines": [
                 "_DEBUG",
