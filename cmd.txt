@@ -7,8 +7,9 @@ menuconfig --board=sf32lb52-lcd_52d
 scons -c
 8线程编译,速度快点
 scons --board=sf32lb52-lcd_52d -j8
-scons --debug=stacktrace,explain --tree=all  --no-exec  --cache-show  --keep-going  --ignore-errors --board=sf32lb52-xty-ai-tht -j14
+scons --debug=stacktrace,explain --tree=all  --no-exec  --cache-show  --keep-going  --board=sf32lb52-xty-ai-tht -j14
 编译后运行build_sf32lb52-lcd_52d_hcpu中生成的uart_download.bat
 cd到Kconfig根目录
 menuconfig --board sf32lb52-xty-ai-tht --board_search_path "G:\Desktop\ProjectJamal\SF32_GITEE\xiaozhi-sf32-lei2\xiaozhi-sf32-lei2\app\boards" Kconfig
 
+LCD_USING_ST7789_240x320_DBI

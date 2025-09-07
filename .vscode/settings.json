@@ -104,7 +104,8 @@
         "bt_env.h": "c",
         "iot_c_api.h": "c",
         "bf0_hal_def.h": "c",
-        "bf0_hal.h": "c"
+        "bf0_hal.h": "c",
+        "drv_io.h": "c"
     },
     "python.autoComplete.extraPaths": [
         "D:/ToolChains/micropython-1.24.1/lib/micropython-lib/micropython",
